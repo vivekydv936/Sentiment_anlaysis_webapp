@@ -51,19 +51,21 @@ const testimonials = [
   },
 ];
 
-const statVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.2, duration: 0.7, type: 'spring' } }),
+const sectionVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: 'easeInOut' } },
 };
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.2 + 0.5, duration: 0.7, type: 'spring' } }),
+const staggerContainer = {
+  visible: {
+    transition: {
+      staggerChildren: 0.18,
+      ease: 'easeInOut',
+    },
+  },
 };
-
-const heroVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1, type: 'spring' } },
+const cardFade = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeInOut' } },
 };
 
 const Home = () => {
@@ -90,6 +92,9 @@ const Home = () => {
     }
   }, [counted]);
 
+  // Split title into words for animation
+  const titleWords = "Welcome to Feedback Hub".split(' ');
+
   return (
     <div className="bg-light min-h-screen flex flex-col">
       {/* Hero Section */}
@@ -103,11 +108,30 @@ const Home = () => {
         }}
         initial="hidden"
         animate="visible"
-        variants={heroVariants}
+        variants={sectionVariants}
       >
-        <motion.h1 className="text-5xl font-extrabold mb-4 drop-shadow-lg" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 1, type: 'spring' }}>
-          Campus Event Feedback Hub
+        <motion.h1
+          className="text-5xl font-extrabold mb-4 drop-shadow-lg flex flex-wrap justify-center"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: { transition: { staggerChildren: 0.1 } },
+          }}
+        >
+          {titleWords.map((word, index) => (
+            <motion.span
+              key={index}
+              className="inline-block mr-2"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { type: 'spring' } },
+              }}
+            >
+              {word}
+            </motion.span>
+          ))}
         </motion.h1>
+
         <motion.p className="text-xl mb-8 max-w-2xl mx-auto" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1, type: 'spring' }}>
           Share your thoughts, help improve campus life, and see your impact in real time!
         </motion.p>
@@ -145,17 +169,25 @@ const Home = () => {
       {/* Removed: Now handled in Navbar */}
 
       {/* Dashboard Overview */}
-      <section className="max-w-4xl mx-auto w-full py-6 px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <motion.section
+        className="max-w-4xl mx-auto w-full py-6 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {quickStats.map((stat, idx) => (
             <motion.div
               key={idx}
               className="bg-white rounded-xl shadow p-6 flex flex-col items-center border-t-4 border-indigo-400"
-              custom={idx}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
-              variants={statVariants}
+              variants={cardFade}
             >
               {stat.icon}
               <div className="text-2xl font-bold text-indigo-700 mt-2">
@@ -164,68 +196,96 @@ const Home = () => {
               <div className="text-gray-500 mt-1">{stat.label}</div>
             </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Quick Actions */}
-      <section className="max-w-4xl mx-auto w-full py-6 px-4 flex flex-wrap gap-4 justify-center">
-        <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }}>
+      <motion.section
+        className="max-w-4xl mx-auto w-full py-6 px-4 flex flex-wrap gap-4 justify-center"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }} variants={cardFade}>
           <Link to="/feedback" className="flex-1 min-w-[180px] bg-indigo-500 text-white rounded-lg shadow px-6 py-4 flex flex-col items-center transition">
             <FaComments className="text-3xl mb-2" />
             <span className="font-semibold">Submit Feedback</span>
           </Link>
         </motion.div>
-        <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }}>
+        <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }} variants={cardFade}>
           <Link to="/student" className="flex-1 min-w-[180px] bg-green-500 text-white rounded-lg shadow px-6 py-4 flex flex-col items-center transition">
             <FaUserCircle className="text-3xl mb-2" />
             <span className="font-semibold">My Dashboard</span>
           </Link>
         </motion.div>
         {isAdmin && (
-          <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }}>
+          <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.97 }} variants={cardFade}>
             <Link to="/admin" className="flex-1 min-w-[180px] bg-pink-500 text-white rounded-lg shadow px-6 py-4 flex flex-col items-center transition">
               <FaUserShield className="text-3xl mb-2" />
               <span className="font-semibold">Admin Dashboard</span>
             </Link>
           </motion.div>
         )}
-      </section>
+      </motion.section>
 
       {/* Content Sections (Features, Testimonials, etc.) */}
-      <section className="max-w-5xl mx-auto w-full py-10 px-4">
-        <h2 className="text-2xl font-bold text-center text-primary mb-8">Why Use Our Platform?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <motion.section
+        className="relative max-w-5xl mx-auto w-full py-10 px-4 z-10"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        {/* Animated background blobs */}
+        <div className="pointer-events-none select-none absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary opacity-20 rounded-full blur-3xl animate-blob1" />
+          <div className="absolute top-1/2 right-0 w-60 h-60 bg-accent opacity-20 rounded-full blur-3xl animate-blob2" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary opacity-20 rounded-full blur-3xl animate-blob3" />
+        </div>
+        <h2 className="text-2xl font-bold text-center text-primary mb-8 relative z-10">Why Use Our Platform?</h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative z-10"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {features.map((f, idx) => (
-            <div
+            <motion.div
               key={idx}
               className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center border-b-4 border-accent transition-all duration-300 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:border-primary hover:z-20"
               style={{ willChange: 'transform' }}
+              variants={cardFade}
             >
               {f.icon}
               <div className="font-bold text-lg mt-3 mb-1 text-dark">{f.title}</div>
               <div className="text-dark/70 text-center text-base leading-relaxed">{f.desc}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-        <h2 className="text-2xl font-bold text-center text-primary mb-8">What Users Say</h2>
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch">
+        </motion.div>
+        <h2 className="text-2xl font-bold text-center text-primary mb-8 relative z-10">What Users Say</h2>
+        <motion.div
+          className="flex flex-col md:flex-row gap-8 justify-center items-stretch relative z-10"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {testimonials.map((t, idx) => (
             <motion.div
               key={idx}
-              className="bg-section-gradient rounded-2xl shadow p-6 flex-1 flex flex-col items-center border-l-4 border-accent hover:scale-105 transition-transform min-h-[180px] text-dark"
-              custom={idx}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
-              variants={cardVariants}
+              className="bg-section-gradient rounded-2xl shadow p-6 flex-1 flex flex-col items-center border-l-4 border-accent transition-all duration-300 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:border-primary hover:z-20 text-dark"
+              style={{ willChange: 'transform' }}
+              variants={cardFade}
             >
               {t.avatar}
               <div className="italic mt-3 mb-2 text-center text-base">{t.text}</div>
               <div className="font-semibold text-primary">- {t.name}</div>
             </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Admin-specific Elements (if admin) */}
       {isAdmin && (
