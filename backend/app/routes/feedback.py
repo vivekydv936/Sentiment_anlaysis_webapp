@@ -4,8 +4,11 @@ from fastapi.encoders import jsonable_encoder
 from typing import List
 from textblob import TextBlob
 
+# Import the Feedback model from the new models.py file
+from ..models import Feedback
+
 # We can reuse the Feedback model from main.py or redefine if needed
-from ..main import Feedback # Assuming Feedback model is in main for now
+# from ..main import Feedback # Assuming Feedback model is in main for now
 from ..main import get_database
 
 router = APIRouter()

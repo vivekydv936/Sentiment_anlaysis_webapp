@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel
+# Removed BaseModel import as Feedback model is moved
 from .routes.api import router
 from .routes.feedback import router as feedback_router
 from .middleware.logging import LoggingMiddleware
@@ -23,10 +23,10 @@ db = Database() # Instantiated the Database class
 async def get_database() -> AsyncIOMotorClient:
     return db.client
 
-# Pydantic model for Feedback
-class Feedback(BaseModel):
-    feedback_text: str
-    # sentiment_score: float = None # We will add this after analysis
+# Removed Pydantic model for Feedback
+# class Feedback(BaseModel):
+#     feedback_text: str
+#     # sentiment_score: float = None # We will add this after analysis
 
 app = FastAPI(
     title=os.getenv("APP_NAME", "FastAPI Backend"),
@@ -52,6 +52,7 @@ app.include_router(feedback_router, tags=["Feedback"], prefix="/feedback")
 @app.on_event("startup")
 async def startup_db_client():
     db.client = AsyncIOMotorClient(MONGO_DETAILS)
+    # Access the database instance from app state
     app.mongodb = db.client[os.getenv("MONGO_DATABASE_NAME", "feedback_db")]
     print("Connected to MongoDB")
 
