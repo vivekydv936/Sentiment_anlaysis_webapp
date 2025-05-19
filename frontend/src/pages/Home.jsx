@@ -14,7 +14,7 @@ const quickStats = [
   { icon: <FaCalendarAlt className="text-indigo-500 text-2xl" />, label: 'Events', value: 8 },
   { icon: <FaComments className="text-green-500 text-2xl" />, label: 'Comments', value: 120 },
 ];
-
+   
 const features = [
   {
     icon: <FaRocket className="text-indigo-600 text-3xl" />,
