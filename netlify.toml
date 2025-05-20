@@ -5,5 +5,3 @@
 
 [build.environment]
   PYTHON_VERSION = "3.13.3"
-  # Tell the build process where to find Rust/Cargo
-  PATH = "/opt/buildhome/.cargo/bin:$PATH"

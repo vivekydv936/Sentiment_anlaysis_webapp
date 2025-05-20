@@ -1,7 +1,0 @@
-[build]
-  base = "/"
-  publish = "backend"
-  command = "npm install && npm start"
-
-[build.environment]
-  PYTHON_VERSION = "3.13.3"
