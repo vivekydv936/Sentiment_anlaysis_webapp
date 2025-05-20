@@ -1,21 +1,7 @@
-
 [build]
   base = "/"
   publish = "backend"
-  command = """
-    # Install Rust toolchain for pydantic-core compilation
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source $HOME/.cargo/env
-    rustup default stable
-    
-    # Print Rust version to confirm installation
-    rustc --version
-    cargo --version
-    
-    # Install Python dependencies
-    pip install --upgrade pip
-    pip install -r requirements.txt
-  """
+  command = "npm install && npm start"
 
 [build.environment]
   PYTHON_VERSION = "3.13.3"
