@@ -1,6 +1,6 @@
 [build]
-  base = "/"
-  publish = "backend"
+  base = "backend"
+  publish = "."
   command = "npm install && npm start"
 
 [build.environment]
