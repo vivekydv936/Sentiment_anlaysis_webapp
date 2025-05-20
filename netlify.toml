@@ -1,7 +1,7 @@
 [build]
   base = "/"
   publish = "backend"
-  command = "chmod +x ./build.sh && ./build.sh"
+  command = "npm install && npm start"
 
 [build.environment]
   PYTHON_VERSION = "3.13.3"
