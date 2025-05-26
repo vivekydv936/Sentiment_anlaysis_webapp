@@ -29,6 +29,23 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
+app.get('/', (req, res) => {
+  res.send({
+    activeStatus: true,
+    error: false,
+    message: 'Server is running',
+    data: null,
+    statusCode: 200,
+    timestamp: new Date().toISOString(),
+    path: req.originalUrl,
+    method: req.method,
+    headers: req.headers,
+    body: req.body,
+    query: req.query,
+    params: req.params,
+    
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
