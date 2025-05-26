@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCalendarAlt, FaStar, FaSmile, FaFrown, FaMeh } from 'react-icons/fa';
+import { submitFeedback, getAllFeedbacks } from '../services/api';
 
 const attendedEvents = [
   { name: 'Tech Fest', type: 'Academic', date: '2024-06-01' },
@@ -38,6 +39,18 @@ const quickIcon = {
 };
 
 const StudentDashboard = () => {
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  useEffect(() => {
+    getAllFeedbacks().then(setFeedbackList);
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await submitFeedback({ rating, feedback });
+    // handle result
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-8 flex flex-col items-center">
       <div className="w-full max-w-3xl">
@@ -61,7 +74,7 @@ const StudentDashboard = () => {
         <div>
           <h3 className="text-xl font-semibold mb-4 text-indigo-700">Feedbacks Submitted</h3>
           <div className="space-y-4">
-            {feedbacks.map((fb, idx) => (
+            {feedbackList.map((fb, idx) => (
               <div key={idx} className="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row md:items-center md:justify-between border-l-4 border-indigo-400">
                 <div className="flex-1">
                   <div className="flex items-center mb-1">
