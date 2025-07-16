@@ -11,7 +11,15 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3004', // your local frontend
+    'https://sentiment-analysis-webapp-er7y.vercel.app' // your deployed frontend
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Database connection
