@@ -6,7 +6,7 @@ import AdminDashboard from '../pages/AdminDashboard';
 import StudentDashboard from '../pages/StudentDashboard';
 import StudentLogin from '../pages/StudentLogin';
 import StudentRegister from '../pages/StudentRegister';
-import Layout from '../components/Layout';
+import Layout from '../pages/Layout';
 
 export const router = createBrowserRouter([
   {
