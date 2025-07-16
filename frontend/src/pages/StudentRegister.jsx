@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
 
 const StudentRegister = () => {
@@ -10,6 +10,10 @@ const StudentRegister = () => {
     confirmPassword: '',
     studentId: '',
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,11 +23,54 @@ const StudentRegister = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the registration logic
-    console.log(formData);
+    setError('');
+    setSuccess(false);
+    setLoading(true);
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          studentId: formData.studentId
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({ name: '', email: '', password: '', confirmPassword: '', studentId: '' });
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      } else {
+        setError(data.message || 'Registration failed');
+      }
+    } catch (err) {
+      setError('Network error');
+    }
+    setLoading(false);
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h2>
+          <p className="text-gray-600">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -152,9 +199,11 @@ const StudentRegister = () => {
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                disabled={loading}
               >
-                Create Account
+                {loading ? 'Registering...' : 'Create Account'}
               </button>
+              {error && <div style={{ color: 'red', marginTop: '8px' }}>{error}</div>}
             </div>
           </form>
         </div>

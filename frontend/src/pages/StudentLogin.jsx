@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 
 const StudentLogin = () => {
@@ -7,11 +7,15 @@ const StudentLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simple login state for demo
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess(false);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: 'POST',
@@ -21,8 +25,15 @@ const StudentLogin = () => {
       const data = await response.json();
       if (response.ok) {
         // Save token, redirect, or set login state here
-        alert('Login successful!');
-        // Example: localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.token); // Save JWT token
+        setIsLoggedIn(true);
+        setSuccess(true);
+        setEmail('');
+        setPassword('');
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          navigate('/student');
+        }, 1000);
       } else {
         setError(data.message || 'Login failed');
       }
@@ -31,6 +42,17 @@ const StudentLogin = () => {
     }
     setLoading(false);
   };
+
+  if (isLoggedIn && success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-bold text-green-600 mb-4">Login Successful!</h2>
+          <p className="text-gray-600">Redirecting to your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -122,7 +144,7 @@ const StudentLogin = () => {
                 {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {error && <div style={{ color: 'red', marginTop: '8px' }}>{error}</div>}
           </form>
         </div>
       </div>
