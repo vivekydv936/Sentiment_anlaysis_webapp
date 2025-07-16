@@ -13,7 +13,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    'https://sentiment-anlaysis-webapp-er7y.vercel.app/', // your deployed frontend
+    'https://sentiment-anlaysis-webapp-er7y.vercel.app', // your deployed frontend
     'http://localhost:3004' // your local frontend (optional)
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
