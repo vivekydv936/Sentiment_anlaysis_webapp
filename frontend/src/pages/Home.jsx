@@ -5,8 +5,8 @@ import mainBg from '../assets/main.jpg';
 import { motion, useAnimation } from 'framer-motion';
 
 // Placeholder for authentication and admin status
-const isLoggedIn = false; // Set to true to simulate logged-in user
-const isAdmin = false; // Set to true to simulate admin
+const isLoggedIn = true; // Set to true to simulate logged-in user
+const isAdmin = true; // Set to true to simulate admin
 const userName = 'John Doe';
 
 const quickStats = [
