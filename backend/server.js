@@ -10,12 +10,28 @@ dotenv.config();
 
 const app = express();
 
+// A more flexible CORS configuration for Vercel
+const allowedOrigins = [
+  'https://sentiment-anlaysis-webapp-er7y.vercel.app',
+  'http://localhost:3004'
+];
+
 // Middleware
 app.use(cors({
-  origin: [
-    'https://sentiment-anlaysis-webapp-er7y.vercel.app', // your deployed frontend
-    'http://localhost:3004' // your local frontend (optional)
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow Vercel preview deployments and main domain
+    if (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/sentiment-anlaysis-webapp-er7y-.*\.vercel\.app$/.test(origin)
+    ) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
